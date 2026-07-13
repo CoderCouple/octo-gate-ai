@@ -1,0 +1,13 @@
+**/node_modules
+**/dist
+**/.next
+**/.turbo
+**/coverage
+.git
+.github
+.vscode
+.railway
+.vercel
+design
+*.log
+.DS_Store

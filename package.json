@@ -1,0 +1,27 @@
+{
+  "name": "octogateai",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Motion-based CAPTCHA / human-verification service",
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n backend,web -c green,blue \"npm run dev -w @octogate/backend\" \"npm run dev -w @octogate/web\"",
+    "dev:backend": "npm run dev -w @octogate/backend",
+    "dev:web": "npm run dev -w @octogate/web",
+    "build:widget": "npm run build -w @octogate/widget",
+    "build:web": "npm run build -w @octogate/web",
+    "build:backend": "npm run build -w @octogate/backend",
+    "build:core": "npm run build -w @octogate/core",
+    "build": "npm run build:core && npm run build:widget && npm run build:backend && npm run build:web",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm test -w @octogate/backend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Two-theme palette. Tokens are raw HSL triplets (no hsl() wrapper) so
+   shadcn's `hsl(var(--x))` idiom works. Design rule: NO gradients, NO
+   shadows, NO rounded corners — --radius stays 0. */
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+    --primary: 0 0% 0%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 0 0% 92%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 100% 45%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 87%;
+    --input: 0 0% 87%;
+    --ring: 0 0% 0%;
+    --radius: 0px;
+  }
+
+  .dark {
+    --background: 0 0% 0%;
+    --foreground: 135 100% 50%;
+    --card: 0 0% 0%;
+    --card-foreground: 135 100% 50%;
+    --popover: 0 0% 0%;
+    --popover-foreground: 135 100% 50%;
+    --primary: 135 100% 50%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 135 30% 8%;
+    --secondary-foreground: 135 100% 50%;
+    --muted: 135 20% 6%;
+    --muted-foreground: 135 40% 60%;
+    --accent: 135 30% 12%;
+    --accent-foreground: 135 100% 50%;
+    --destructive: 0 100% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 135 30% 12%;
+    --input: 135 30% 8%;
+    --ring: 135 100% 50%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body {
+    @apply bg-background text-foreground;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  ::selection {
+    background: hsl(var(--foreground));
+    color: hsl(var(--background));
+  }
+}

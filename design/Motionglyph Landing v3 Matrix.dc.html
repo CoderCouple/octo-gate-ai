@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body{margin:0;background:#020503;color:#c8ffd4;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;-webkit-font-smoothing:antialiased}
+  a{color:#00e63f}
+  a:hover{color:#7dffa0}
+  input::placeholder{color:#1f7a3a}
+  ::selection{background:#00e63f;color:#020503}
+  input[type=range]{accent-color:#00e63f}
+  html{scroll-behavior:smooth}
+  @keyframes mg-ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @keyframes mg-blink{0%,49%{opacity:1}50%,100%{opacity:0.15}}
+  @keyframes mg-flicker{0%,100%{opacity:1}92%{opacity:1}93%{opacity:0.82}94%{opacity:1}97%{opacity:0.9}98%{opacity:1}}
+</style>
+</helmet>
+
+<div style="position:fixed;inset:0;pointer-events:none;z-index:50;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.22) 0px,rgba(0,0,0,0.22) 1px,transparent 1px,transparent 3px)" aria-hidden="true"></div>
+
+<header style="border-bottom:1px solid #0f3d1f" data-screen-label="Header">
+  <div style="max-width:1080px;margin:0 auto;padding:0 24px;height:64px;display:flex;justify-content:space-between;align-items:center">
+    <div style="display:flex;align-items:center;gap:10px;animation:mg-flicker 7s linear infinite">
+      <span style="display:inline-block;width:10px;height:10px;background:#00e63f;box-shadow:0 0 8px rgba(0,230,63,0.8)"></span>
+      <span style="font-weight:700;letter-spacing:0.12em;font-size:14px;text-transform:uppercase;color:#00e63f;text-shadow:0 0 12px rgba(0,230,63,0.5)">Motionglyph</span>
+    </div>
+    <a href="#partners" style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#00e63f;text-decoration:none;border:1px solid #0f3d1f;padding:8px 14px" style-hover="background:#00e63f;color:#020503;border-color:#00e63f">Design partners</a>
+  </div>
+</header>
+
+<div style="border-bottom:1px solid #0f3d1f;overflow:hidden;white-space:nowrap" aria-hidden="true" data-screen-label="Ticker">
+  <div style="display:inline-flex;gap:0;animation:mg-ticker 26s linear infinite;will-change:transform">
+    <span style="font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:#1f9e4a;padding:9px 0;display:inline-block">Read what AI can't&nbsp;&nbsp;·&nbsp;&nbsp;Humans pass in ~1 second&nbsp;&nbsp;·&nbsp;&nbsp;Zero documented AI solves&nbsp;&nbsp;·&nbsp;&nbsp;A frozen frame is pure noise&nbsp;&nbsp;·&nbsp;&nbsp;Read what AI can't&nbsp;&nbsp;·&nbsp;&nbsp;Humans pass in ~1 second&nbsp;&nbsp;·&nbsp;&nbsp;Zero documented AI solves&nbsp;&nbsp;·&nbsp;&nbsp;A frozen frame is pure noise&nbsp;&nbsp;·&nbsp;&nbsp;</span>
+    <span style="font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:#1f9e4a;padding:9px 0;display:inline-block">Read what AI can't&nbsp;&nbsp;·&nbsp;&nbsp;Humans pass in ~1 second&nbsp;&nbsp;·&nbsp;&nbsp;Zero documented AI solves&nbsp;&nbsp;·&nbsp;&nbsp;A frozen frame is pure noise&nbsp;&nbsp;·&nbsp;&nbsp;Read what AI can't&nbsp;&nbsp;·&nbsp;&nbsp;Humans pass in ~1 second&nbsp;&nbsp;·&nbsp;&nbsp;Zero documented AI solves&nbsp;&nbsp;·&nbsp;&nbsp;A frozen frame is pure noise&nbsp;&nbsp;·&nbsp;&nbsp;</span>
+  </div>
+</div>
+
+<div style="max-width:1080px;margin:0 auto;padding:0 24px">
+
+  <div style="padding:80px 0 24px" data-screen-label="Hero + challenge">
+    <p style="font-size:11px;letter-spacing:0.2em;color:#1f9e4a;text-transform:uppercase;margin:0 0 20px">&gt; Verification for the agentic web — public challenge<span style="animation:mg-blink 1.1s step-end infinite">_</span></p>
+    <h1 style="font-size:clamp(44px,8vw,96px);font-weight:700;letter-spacing:-0.02em;line-height:0.96;margin:0 0 24px;text-transform:uppercase;color:#eafff0;text-shadow:0 0 24px rgba(0,230,63,0.35)">Read what<br>AI <span style="color:#00e63f;text-shadow:0 0 30px rgba(0,230,63,0.7)">can't.</span></h1>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:0 0 48px">
+      <p style="color:#6fce8d;font-size:15px;line-height:1.65;margin:0;max-width:46ch;text-wrap:pretty">A word is moving in the dots below. Humans see it in about a second. Frontier AI models — given screenshots, frames, even full video — read the decoy and miss the message.</p>
+      <p style="color:#1f9e4a;font-size:12px;line-height:1.7;margin:0;align-self:end;text-align:right">Type what you see — or write your own.<br>The counter is public.</p>
+    </div>
+
+    <div style="display:flex;justify-content:center;margin-bottom:14px">
+      <span style="display:inline-flex;border:1px solid #0f3d1f">
+        <button onClick="{{ onModeChallenge }}" aria-pressed="{{ isChallengeStr }}" style="font-family:inherit;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding:10px 18px;border:none;cursor:pointer;background:{{ tabChallengeBg }};color:{{ tabChallengeColor }};font-weight:700">Try to beat it</button>
+        <button onClick="{{ onModeCompose }}" aria-pressed="{{ isComposeStr }}" style="font-family:inherit;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding:10px 18px;border:none;border-left:1px solid #0f3d1f;cursor:pointer;background:{{ tabComposeBg }};color:{{ tabComposeColor }};font-weight:700">Write your own</button>
+      </span>
+    </div>
+
+    <div style="border:1px solid #145229;background:#010401;box-shadow:0 0 40px rgba(0,230,63,0.12),inset 0 0 60px rgba(0,230,63,0.04)">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 18px;font-size:10px;letter-spacing:0.16em;color:#1f9e4a;text-transform:uppercase">
+        <span style="color:#6fce8d;font-weight:700">{{ modeTitle }}</span>
+        <span style="display:flex;align-items:center;gap:16px">
+          <span style="display:flex;align-items:center;gap:8px"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:{{ liveDotColor }};box-shadow:0 0 6px {{ liveDotColor }};animation:{{ liveDotAnim }}"></span><span style="color:#6fce8d">{{ liveLabel }}</span></span>
+          <span ref="{{ frameRef }}">frame —</span>
+        </span>
+      </div>
+      <canvas ref="{{ canvasRef }}" width="1032" height="320" role="img" aria-label="Animated dot field concealing a moving message" style="display:block;width:100%;height:auto;border-top:1px solid #0f3d1f"></canvas>
+
+      <sc-if value="{{ isChallenge }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-wrap:wrap;gap:0;align-items:stretch;border-top:1px solid #0f3d1f">
+          <input ref="{{ guessRef }}" maxLength="8" placeholder="> TYPE THE WORD" autoComplete="off" spellCheck="false" aria-label="Type the moving word you see" onKeyDown="{{ onKeyDown }}" disabled="{{ answered }}" style="font-family:inherit;font-size:15px;letter-spacing:0.26em;text-transform:uppercase;padding:16px 18px;border:none;background:#010401;color:#00e63f;flex:1 1 200px;min-width:180px" style-focus="outline:none;background:#03140a">
+          <button onClick="{{ onSubmit }}" disabled="{{ answered }}" style="font-family:inherit;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding:16px 26px;border:none;border-left:1px solid #0f3d1f;background:#00e63f;color:#020503;cursor:pointer;font-weight:700;opacity:{{ submitOpacity }}" style-hover="background:#7dffa0">Submit</button>
+          <button onClick="{{ onNext }}" style="font-family:inherit;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding:16px 22px;border:none;border-left:1px solid #0f3d1f;background:#010401;color:#00e63f;cursor:pointer" style-hover="background:#03140a">New</button>
+        </div>
+        <div role="status" aria-live="polite" style="padding:{{ resultPad }};border-top:1px solid #0f3d1f;background:#010401;font-size:13px;line-height:1.6;color:{{ resultColor }}">{{ resultText }}</div>
+      </sc-if>
+
+      <sc-if value="{{ isCompose }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-wrap:wrap;gap:0;align-items:stretch;border-top:1px solid #0f3d1f">
+          <input ref="{{ msgRef }}" maxLength="24" placeholder="> WRITE YOUR MESSAGE" autoComplete="off" spellCheck="false" aria-label="Write your own hidden message" onInput="{{ onMsgInput }}" style="font-family:inherit;font-size:15px;letter-spacing:0.26em;text-transform:uppercase;padding:16px 18px;border:none;background:#010401;color:#00e63f;flex:1 1 240px;min-width:200px" style-focus="outline:none;background:#03140a">
+          <span style="font-size:11px;color:#1f7a3a;align-self:center;padding:0 18px;letter-spacing:0.1em">{{ charCount }}/24</span>
+        </div>
+      </sc-if>
+
+      <div style="display:flex;flex-wrap:wrap;gap:0;align-items:stretch;border-top:1px solid #0f3d1f">
+        <button onClick="{{ onPause }}" aria-pressed="{{ pausedStr }}" style="font-family:inherit;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding:14px 20px;border:none;border-right:1px solid #0f3d1f;background:#010401;color:#1f9e4a;cursor:pointer" style-hover="background:#03140a;color:#00e63f">{{ pauseLabel }}</button>
+        <button onClick="{{ onInvert }}" aria-pressed="{{ invertStr }}" style="font-family:inherit;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding:14px 20px;border:none;border-right:1px solid #0f3d1f;background:#010401;color:{{ invertColor }};cursor:pointer" style-hover="background:#03140a;color:#00e63f">Invert</button>
+        <button onClick="{{ onMotion }}" style="font-family:inherit;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding:14px 20px;border:none;border-right:1px solid #0f3d1f;background:#010401;color:#1f9e4a;cursor:pointer" style-hover="background:#03140a;color:#00e63f">Motion: {{ motionLabel }}</button>
+        <span style="display:flex;align-items:center;gap:10px;padding:0 20px;border-right:1px solid #0f3d1f;font-size:10px;letter-spacing:0.14em;color:#1f9e4a;text-transform:uppercase">
+          Speed
+          <input type="range" min="20" max="300" step="5" value="{{ speed }}" onChange="{{ onSpeed }}" aria-label="Motion speed" style="width:110px">
+          <span style="color:#6fce8d;min-width:56px">{{ speedLabel }}</span>
+        </span>
+        <button onClick="{{ onReset }}" style="font-family:inherit;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding:14px 20px;border:none;border-right:1px solid #0f3d1f;background:#010401;color:#1f9e4a;cursor:pointer" style-hover="background:#03140a;color:#00e63f">Reset</button>
+        <span style="flex:1"></span>
+        <button onClick="{{ onFrame }}" style="font-family:inherit;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding:14px 20px;border:none;border-left:1px solid #0f3d1f;background:#010401;color:#1f9e4a;cursor:pointer" style-hover="background:#03140a;color:#00e63f">Frame ↓</button>
+        <button onClick="{{ onClip }}" style="font-family:inherit;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding:14px 20px;border:none;border-left:1px solid #0f3d1f;background:#00e63f;color:#020503;font-weight:700;cursor:pointer" style-hover="background:#7dffa0">{{ clipLabel }}</button>
+      </div>
+    </div>
+    <sc-if value="{{ rm }}" hint-placeholder-val="{{ false }}">
+      <p style="margin:12px 0 0;font-size:12px;color:#1f9e4a">Reduced motion detected — the challenge starts paused. Press Play when you're ready.</p>
+    </sc-if>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:#0f3d1f;margin:48px 0 0;border:1px solid #0f3d1f">
+      <div style="padding:24px;background:#020503">
+        <div style="font-size:44px;font-weight:700;letter-spacing:-0.03em;line-height:1;margin-bottom:10px;color:#eafff0">{{ statAttempts }}</div>
+        <div style="font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#00e63f">Human attempts</div>
+        <div style="font-size:11px;color:#1f9e4a;margin-top:6px">{{ statScope }}</div>
+      </div>
+      <div style="padding:24px;background:#020503">
+        <div style="font-size:44px;font-weight:700;letter-spacing:-0.03em;line-height:1;margin-bottom:10px;color:#00e63f;text-shadow:0 0 20px rgba(0,230,63,0.5)">{{ statRate }}</div>
+        <div style="font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#00e63f">Human solve rate</div>
+        <div style="font-size:11px;color:#1f9e4a;margin-top:6px">First try, no reveal</div>
+      </div>
+      <div style="padding:24px;background:#020503">
+        <div style="font-size:44px;font-weight:700;letter-spacing:-0.03em;line-height:1;margin-bottom:10px;color:#eafff0">0</div>
+        <div style="font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#00e63f">Documented AI solves</div>
+        <div style="font-size:11px;color:#1f9e4a;margin-top:6px">Unprompted, without being told the technique</div>
+      </div>
+    </div>
+  </div>
+
+  <section style="padding:88px 0 0" data-screen-label="Why this works">
+    <div style="display:flex;align-items:baseline;gap:16px;border-top:1px solid #0f3d1f;padding-top:16px;margin-bottom:40px">
+      <span style="font-size:11px;color:#1f7a3a">01</span>
+      <h2 style="font-size:26px;font-weight:700;letter-spacing:0.02em;margin:0;text-transform:uppercase;color:#eafff0">Why this works</h2>
+    </div>
+    <p style="color:#6fce8d;font-size:14px;line-height:1.65;max-width:62ch;margin:0 0 40px;text-wrap:pretty">Every dot is identical in size, color, and density. The word exists only as coherent motion — a signal human vision groups instantly ("common fate"), and one that image-based models analyzing frames never see.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:40px">
+      <div>
+        <h3 style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#00e63f;margin:0 0 10px;border-bottom:1px solid #0f3d1f;padding-bottom:10px">&gt; Humans pass fast</h3>
+        <p style="font-size:13px;line-height:1.65;color:#6fce8d;margin:0">No distorted letters, no fire hydrants. The moving word pops out of the noise in under a second, at any age and reading level.</p>
+      </div>
+      <div>
+        <h3 style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#00e63f;margin:0 0 10px;border-bottom:1px solid #0f3d1f;padding-bottom:10px">&gt; Screenshots are empty</h3>
+        <p style="font-size:13px;line-height:1.65;color:#6fce8d;margin:0">Pause the challenge or download a frame: a frozen image is statistically flat noise. There is no glyph to OCR, so vision-model attacks return nothing.</p>
+      </div>
+      <div>
+        <h3 style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#00e63f;margin:0 0 10px;border-bottom:1px solid #0f3d1f;padding-bottom:10px">&gt; Decoys punish analysis</h3>
+        <p style="font-size:13px;line-height:1.65;color:#6fce8d;margin:0">A static decoy word hides in every challenge. Agents doing frame analysis find it, answer confidently — and answer wrong. Motion vectors randomize per challenge.</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:88px 0 0" data-screen-label="Transcripts">
+    <div style="display:flex;align-items:baseline;gap:16px;border-top:1px solid #0f3d1f;padding-top:16px;margin-bottom:40px">
+      <span style="font-size:11px;color:#1f7a3a">02</span>
+      <h2 style="font-size:26px;font-weight:700;letter-spacing:0.02em;margin:0;text-transform:uppercase;color:#eafff0">Frontier models, on the record</h2>
+    </div>
+    <p style="color:#6fce8d;font-size:14px;line-height:1.65;max-width:62ch;margin:0 0 20px;text-wrap:pretty">We feed every challenge to leading models and publish the transcripts — the guesses, the hallucinated decoys, the 19-minute reasoning chains that end in the wrong word.</p>
+    <span style="display:inline-block;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#020503;background:#00e63f;padding:4px 8px;margin-bottom:20px;font-weight:700">Sample layout — replace with documented runs before launch</span>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1px;background:#0f3d1f;border:1px solid #0f3d1f">
+      <div style="padding:24px;background:#020503">
+        <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;font-weight:700;margin-bottom:12px;color:#eafff0">[Model name · version]</div>
+        <div style="font-size:12px;color:#1f9e4a;margin-bottom:12px">&gt; Prompt: "What word is written in this video?"</div>
+        <div style="font-size:13px;line-height:1.65;border-left:2px solid #0f3d1f;padding-left:14px;color:#6fce8d">[Paste the model's actual response here — typically it reports the static decoy word with high confidence, or hallucinates a word that isn't present.]</div>
+        <div style="margin-top:14px;font-size:11px;letter-spacing:0.08em;font-weight:700;color:#00e63f">✗ READ THE DECOY · MISSED THE MESSAGE</div>
+      </div>
+      <div style="padding:24px;background:#020503">
+        <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;font-weight:700;margin-bottom:12px;color:#eafff0">[Model name · version]</div>
+        <div style="font-size:12px;color:#1f9e4a;margin-bottom:12px">&gt; Prompt: "Analyze the frames and extract the hidden text."</div>
+        <div style="font-size:13px;line-height:1.65;border-left:2px solid #0f3d1f;padding-left:14px;color:#6fce8d">[Paste the reasoning transcript excerpt — long analysis chains that conclude with a nonexistent word make the strongest exhibits.]</div>
+        <div style="margin-top:14px;font-size:11px;letter-spacing:0.08em;font-weight:700;color:#00e63f">✗ HALLUCINATED AFTER EXTENDED ANALYSIS</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="partners" style="margin:88px 0 0;background:#010401;border:1px solid #145229;box-shadow:0 0 40px rgba(0,230,63,0.12);padding:56px 48px" data-screen-label="CTA">
+    <p style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#1f9e4a;margin:0 0 16px">03 — Design partners</p>
+    <h2 style="font-size:clamp(26px,4vw,40px);font-weight:700;letter-spacing:0.01em;margin:0 0 16px;color:#eafff0;text-transform:uppercase;max-width:22ch;line-height:1.1;text-shadow:0 0 24px rgba(0,230,63,0.3)">Bleeding from AI-generated abuse? Let's talk.</h2>
+    <p style="color:#6fce8d;font-size:14px;line-height:1.65;max-width:58ch;margin:0 0 28px;text-wrap:pretty">We're onboarding 5–10 design partners — survey platforms, ticketing, communities, drop commerce — for free integration in exchange for solve-rate data and a case study. You get a challenge AI can't script; we get proof.</p>
+    <a href="mailto:founders@example.com?subject=Motionglyph%20design%20partner" style="display:inline-block;background:#00e63f;color:#020503;text-decoration:none;padding:14px 26px;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;font-weight:700;box-shadow:0 0 20px rgba(0,230,63,0.4)" style-hover="background:#7dffa0;color:#020503">Apply as a design partner →</a>
+  </section>
+
+  <p style="margin:48px 0 88px;padding:16px 18px;border:1px solid #0f3d1f;font-size:13px;line-height:1.65;color:#6fce8d"><strong style="color:#00e63f">Honest threat model:</strong> this public demo validates answers in your browser, so anyone reading the page source can cheat — that's fine, it's a perception demo. The production system renders challenges server-side, never ships the answer to the client, rotates motion encodings per challenge, and includes an accessible non-visual fallback path.</p>
+</div>
+
+<footer style="border-top:1px solid #0f3d1f;padding:24px 0 48px" data-screen-label="Footer">
+  <div style="max-width:1080px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:11px;letter-spacing:0.1em;color:#1f9e4a;text-transform:uppercase">
+    <span>Motionglyph · Prototype 003</span>
+    <span>Wake up, Neo — verification for humans and authorized agents</span>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;dotDensity&quot;: {&quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 0.46, &quot;min&quot;: 0.2, &quot;max&quot;: 0.8, &quot;step&quot;: 0.02, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Challenge engine&quot;},
+  &quot;motionAmplitude&quot;: {&quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 4.6, &quot;min&quot;: 1, &quot;max&quot;: 12, &quot;step&quot;: 0.2, &quot;unit&quot;: &quot;px&quot;, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Challenge engine&quot;},
+  &quot;decoyEnabled&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Challenge engine&quot;}
+}">
+class Component extends DCLogic {
+  state = {
+    mode: 'challenge',
+    paused: false,
+    answered: false,
+    invert: false,
+    motion: 'wiggle',
+    speed: 180,
+    recording: false,
+    resultText: '',
+    resultKind: '',
+    composeMsg: 'WAKE UP NEO',
+    stats: { attempts: 0, solves: 0 },
+    rm: false
+  };
+
+  canvasRef = React.createRef();
+  guessRef = React.createRef();
+  msgRef = React.createRef();
+  frameRef = React.createRef();
+
+  KEY = 'motionglyph:public-stats';
+  WORDS = ["ORCHID","FALCON","MARBLE","VIOLET","CANYON","SILVER","MEADOW","PUZZLE","ROCKET","GARDEN","WINTER","COPPER","BASKET","PLANET","HARBOR","VELVET"];
+  DECOYS = ["TIGER","LEMON","STORM","RIVER","MAPLE","CORAL","AMBER","STONE","CLOUD","BRICK"];
+
+  componentDidMount() {
+    this._initTries = 0;
+    this.initWhenReady();
+  }
+
+  initWhenReady = () => {
+    if (!this.canvasRef.current) {
+      if (this._initTries++ < 600) this._raf = requestAnimationFrame(this.initWhenReady);
+      return;
+    }
+    this.W = 1032; this.H = 320;
+    this.ctx = this.canvasRef.current.getContext('2d');
+    this.t = 0; this.frame = 0; this.last = performance.now();
+    this.reveal = false;
+    // matrix rain columns
+    this.rain = [];
+    for (let i = 0; i < 46; i++) {
+      this.rain.push({ x: Math.random() * this.W, y: Math.random() * this.H, v: 40 + Math.random() * 120, len: 30 + Math.random() * 80 });
+    }
+
+    try {
+      const raw = localStorage.getItem(this.KEY);
+      if (raw) this.setState({ stats: JSON.parse(raw) });
+    } catch (e) {}
+
+    this.newChallenge(false);
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      this.setState({ paused: true, rm: true });
+    }
+
+    this._raf = requestAnimationFrame(this.loop);
+  };
+
+  componentWillUnmount() {
+    cancelAnimationFrame(this._raf);
+    clearTimeout(this._msgTimer);
+    clearInterval(this._recInterval);
+  }
+
+  makeMask(word, fontPx, cyFrac) {
+    const W = this.W, H = this.H;
+    const oc = document.createElement('canvas'); oc.width = W; oc.height = H;
+    const o = oc.getContext('2d');
+    o.font = '900 ' + fontPx + 'px Helvetica, Arial, sans-serif';
+    o.textAlign = 'center'; o.textBaseline = 'middle';
+    o.fillStyle = '#000';
+    o.fillText(word, W / 2, H * cyFrac);
+    const px = o.getImageData(0, 0, W, H).data;
+    return (x, y) => {
+      const xi = x | 0, yi = y | 0;
+      if (xi < 0 || yi < 0 || xi >= W || yi >= H) return false;
+      return px[(yi * W + xi) * 4 + 3] > 96;
+    };
+  }
+
+  pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  buildField(message, decoy) {
+    const W = this.W, H = this.H;
+    const density = this.props.dotDensity ?? 0.46;
+    this.amp = this.props.motionAmplitude ?? 4.6;
+    const msgFont = Math.min(140, (W - 100) / (Math.max(message.length, 3) * 0.62));
+    const inMsg = this.makeMask(message, msgFont, decoy ? 0.38 : 0.5);
+    let inDecoy = null;
+    if (decoy) {
+      const decoyFont = Math.min(90, (W - 100) / (decoy.length * 0.62));
+      inDecoy = this.makeMask(decoy, decoyFont, 0.80);
+    }
+    this.freq = 2.0 + Math.random() * 0.5;
+    this.dir = Math.random() * Math.PI;
+    this.msgDots = []; this.decoyDots = []; this.noise = [];
+    const SPACING = 5;
+    for (let gy = SPACING / 2; gy < H; gy += SPACING) {
+      for (let gx = SPACING / 2; gx < W; gx += SPACING) {
+        if (Math.random() > density) continue;
+        const x = gx + (Math.random() - 0.5) * 3.6, y = gy + (Math.random() - 0.5) * 3.6;
+        if (inMsg(x, y)) this.msgDots.push({ x, y });
+        else if (inDecoy && inDecoy(x, y)) this.decoyDots.push({ x, y });
+        else this.noise.push({ x, y, dir: Math.random() * Math.PI, ph: Math.random() * Math.PI * 2 });
+      }
+    }
+  }
+
+  newChallenge = (focus = true) => {
+    this.answer = this.pick(this.WORDS);
+    let decoy = this.pick(this.DECOYS); if (decoy === this.answer) decoy = this.DECOYS[0];
+    const useDecoy = this.props.decoyEnabled ?? true;
+    this.buildField(this.answer, useDecoy ? decoy : null);
+    this.reveal = false;
+    this.setState({ answered: false, resultText: '', resultKind: '' });
+    if (this.guessRef.current) {
+      this.guessRef.current.value = '';
+      if (focus) this.guessRef.current.focus();
+    }
+  };
+
+  rebuildCompose = () => {
+    const msg = (this.state.composeMsg || 'WAKE UP NEO').toUpperCase().replace(/[^A-Z0-9 !?.]/g, '') || 'WAKE UP NEO';
+    this.buildField(msg, null);
+    this.reveal = false;
+  };
+
+  draw() {
+    const ctx = this.ctx, W = this.W, H = this.H, SIZE = 2.2;
+    const inv = this.state.invert;
+    const bg = inv ? '#eafff0' : '#010401';
+    const dot = inv ? '#043316' : '#00d93c';
+    const dim = inv ? 'rgba(4,51,22,0.18)' : 'rgba(0,217,60,0.18)';
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+    // faint matrix rain behind the field
+    if (!this.state.paused || true) {
+      ctx.fillStyle = inv ? 'rgba(4,51,22,0.07)' : 'rgba(0,217,60,0.07)';
+      for (const r of this.rain) {
+        ctx.fillRect(r.x, ((r.y + this.t * r.v) % (H + r.len)) - r.len, 1.4, r.len);
+      }
+    }
+    ctx.fillStyle = this.reveal ? dim : dot;
+    for (const n of this.noise) {
+      const o = Math.sin(this.t * this.freq + n.ph) * this.amp;
+      ctx.fillRect(n.x + Math.cos(n.dir) * o - SIZE / 2, n.y + Math.sin(n.dir) * o - SIZE / 2, SIZE, SIZE);
+    }
+    for (const d of this.decoyDots) ctx.fillRect(d.x - SIZE / 2, d.y - SIZE / 2, SIZE, SIZE);
+    // correct-answer flash
+    if (this.flashT && this.t < this.flashT) {
+      ctx.fillStyle = inv ? '#010401' : '#eafff0';
+      ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = inv ? '#00d93c' : '#043316';
+      for (const n of this.noise) ctx.fillRect(n.x - SIZE / 2, n.y - SIZE / 2, SIZE, SIZE);
+    }
+    ctx.fillStyle = this.reveal ? '#00ff4c' : dot;
+    let ox, oy;
+    if (this.state.motion === 'scroll') {
+      const PERIOD = W + 280;
+      ox = (this.t * this.state.speed) % PERIOD; oy = 0;
+      for (const d of this.msgDots) {
+        const x = ((d.x + ox) % PERIOD) - 140;
+        if (x < -SIZE || x > W + SIZE) continue;
+        ctx.fillRect(x - SIZE / 2, d.y - SIZE / 2, SIZE, SIZE);
+      }
+    } else {
+      const sp = this.state.speed / 180;
+      const o = Math.sin(this.t * this.freq * sp) * this.amp;
+      ox = Math.cos(this.dir) * o; oy = Math.sin(this.dir) * o;
+      for (const d of this.msgDots) ctx.fillRect(d.x + ox - SIZE / 2, d.y + oy - SIZE / 2, SIZE, SIZE);
+    }
+    if (this.state.paused) {
+      ctx.font = '11px ui-monospace, Menlo, monospace';
+      ctx.fillStyle = inv ? 'rgba(4,51,22,0.5)' : 'rgba(0,217,60,0.5)';
+      ctx.fillText('SINGLE FRAME — NO MESSAGE PRESENT IN THIS IMAGE', 18, H - 16);
+    }
+  }
+
+  loop = (now) => {
+    const dt = Math.min(0.05, (now - this.last) / 1000); this.last = now;
+    if (!this.state.paused) {
+      this.t += dt; this.frame++;
+      if (this.frameRef.current) this.frameRef.current.textContent = 'frame ' + this.frame;
+    }
+    this.draw();
+    this._raf = requestAnimationFrame(this.loop);
+  };
+
+  submit = () => {
+    if (this.state.answered) return;
+    const g = (this.guessRef.current.value || '').toUpperCase().replace(/[^A-Z]/g, '');
+    if (!g) { this.setState({ resultText: '> Type the word you see moving, then submit.', resultKind: 'hint' }); return; }
+    const stats = { ...this.state.stats };
+    stats.attempts++;
+    this.reveal = true;
+    let resultText, resultKind;
+    if (g === this.answer) {
+      stats.solves++;
+      this.flashT = this.t + 0.28;
+      resultText = '✓ Correct — you read ' + this.answer + '. You are (probably) human. Welcome to the real world.';
+      resultKind = 'ok';
+    } else {
+      resultText = '✗ Not quite — the moving word was ' + this.answer + ". (If you typed the bottom word, you found the decoy — that's the trap set for AI.)";
+      resultKind = 'bad';
+    }
+    this.setState({ answered: true, stats, resultText, resultKind });
+    try { localStorage.setItem(this.KEY, JSON.stringify(stats)); } catch (e) {}
+  };
+
+  setMode = (mode) => {
+    if (mode === this.state.mode) return;
+    this.setState({ mode }, () => {
+      if (mode === 'compose') {
+        this.rebuildCompose();
+        if (this.msgRef.current) {
+          this.msgRef.current.value = this.state.composeMsg;
+          this.msgRef.current.focus();
+        }
+      } else {
+        this.newChallenge(false);
+      }
+    });
+  };
+
+  onClip = () => {
+    if (this.state.recording) return;
+    const stream = this.canvasRef.current.captureStream(60);
+    const rec = new MediaRecorder(stream, { mimeType: 'video/webm' });
+    const chunks = [];
+    rec.ondataavailable = (e) => { if (e.data.size) chunks.push(e.data); };
+    rec.onstop = () => {
+      const blob = new Blob(chunks, { type: 'video/webm' });
+      const a = document.createElement('a');
+      a.download = 'motionglyph-clip.webm';
+      a.href = URL.createObjectURL(blob);
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+      this.setState({ recording: false });
+    };
+    this.setState({ recording: true, recLeft: 4 });
+    this._recInterval = setInterval(() => {
+      this.setState(s2 => ({ recLeft: Math.max(0, (s2.recLeft || 0) - 1) }));
+    }, 1000);
+    rec.start();
+    setTimeout(() => { rec.stop(); clearInterval(this._recInterval); }, 4000);
+  };
+
+  renderVals() {
+    const s = this.state;
+    const isChallenge = s.mode === 'challenge';
+    return {
+      canvasRef: this.canvasRef,
+      guessRef: this.guessRef,
+      msgRef: this.msgRef,
+      frameRef: this.frameRef,
+      isChallenge,
+      isCompose: !isChallenge,
+      isChallengeStr: String(isChallenge),
+      isComposeStr: String(!isChallenge),
+      modeTitle: isChallenge ? '> Public challenge' : '> Message composer',
+      onModeChallenge: () => this.setMode('challenge'),
+      onModeCompose: () => this.setMode('compose'),
+      tabChallengeBg: isChallenge ? '#00e63f' : '#020503',
+      tabChallengeColor: isChallenge ? '#020503' : '#1f9e4a',
+      tabComposeBg: !isChallenge ? '#00e63f' : '#020503',
+      tabComposeColor: !isChallenge ? '#020503' : '#1f9e4a',
+      onSubmit: this.submit,
+      onNext: () => this.newChallenge(true),
+      onPause: () => this.setState({ paused: !s.paused }),
+      onKeyDown: (e) => { if (e.key === 'Enter') this.submit(); },
+      onMsgInput: (e) => {
+        const v = e.target.value;
+        this.setState({ composeMsg: v });
+        clearTimeout(this._msgTimer);
+        this._msgTimer = setTimeout(this.rebuildCompose, 250);
+      },
+      charCount: s.composeMsg.length,
+      onInvert: () => this.setState({ invert: !s.invert }),
+      invertStr: String(s.invert),
+      invertColor: s.invert ? '#00e63f' : '#1f9e4a',
+      onMotion: () => this.setState({ motion: s.motion === 'wiggle' ? 'scroll' : 'wiggle' }),
+      motionLabel: s.motion === 'wiggle' ? 'Wiggle' : 'Scroll',
+      speed: s.speed,
+      speedLabel: s.speed + 'px/s',
+      onSpeed: (e) => this.setState({ speed: Number(e.target.value) }),
+      onReset: () => this.setState({ invert: false, motion: 'wiggle', speed: 180, paused: false }, () => {
+        if (this.state.mode === 'compose') this.rebuildCompose(); else this.newChallenge(false);
+      }),
+      onFrame: () => {
+        const a = document.createElement('a');
+        a.download = 'motionglyph-single-frame.png';
+        a.href = this.canvasRef.current.toDataURL('image/png');
+        a.click();
+      },
+      onClip: this.onClip,
+      clipLabel: s.recording ? 'Recording ' + (s.recLeft ?? 4) + 's…' : 'Clip ↓ WebM',
+      answered: s.answered,
+      submitOpacity: s.answered ? 0.45 : 1,
+      pausedStr: String(s.paused),
+      pauseLabel: s.paused ? 'Play' : 'Pause',
+      liveLabel: s.recording ? 'REC · capturing clip' : s.paused ? 'Paused · this is what a screenshot sees' : 'Live',
+      liveDotColor: s.paused && !s.recording ? '#1f7a3a' : '#00e63f',
+      liveDotAnim: s.recording ? 'mg-blink 1s linear infinite' : 'none',
+      resultText: s.resultText,
+      resultColor: s.resultKind === 'ok' ? '#00ff4c' : s.resultKind === 'bad' ? '#6fce8d' : '#1f9e4a',
+      resultPad: s.resultText ? '14px 18px' : '0 18px',
+      rm: s.rm,
+      statAttempts: s.stats.attempts.toLocaleString(),
+      statRate: s.stats.attempts ? Math.round(100 * s.stats.solves / s.stats.attempts) + '%' : '—',
+      statScope: 'Stored in this browser (demo counter)'
+    };
+  }
+}
+</script>
+</body>
+</html>
