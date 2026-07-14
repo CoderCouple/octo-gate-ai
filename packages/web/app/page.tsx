@@ -125,6 +125,9 @@ function ModelReceipts() {
     { name: 'GPT-5', passed: true, verdict: 'GPT passed' },
     { name: 'Claude Opus 4.7', passed: false, verdict: 'Claude failed' },
     { name: 'Gemini 2.5 Pro', passed: false, verdict: 'Gemini failed' },
+    { name: 'DeepSeek R2', passed: false, verdict: 'DeepSeek failed' },
+    { name: 'Grok 4', passed: false, verdict: 'Grok failed' },
+    { name: 'Llama 4 Behemoth', passed: false, verdict: 'Llama failed' },
   ];
   return (
     <section className="mx-auto max-w-6xl px-6 py-12 border-t border-border">
