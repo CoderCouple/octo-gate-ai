@@ -154,7 +154,7 @@ function ModelReceipts() {
             <div
               className={
                 m.passed
-                  ? 'mt-2 inline-flex items-center gap-2 border-2 border-primary bg-primary/10 px-3 py-1.5 text-[13px] tracking-widest uppercase font-bold text-primary'
+                  ? 'mt-2 inline-flex items-center gap-2 border-2 border-brand bg-brand/10 px-3 py-1.5 text-[13px] tracking-widest uppercase font-bold text-brand'
                   : 'mt-2 inline-flex items-center gap-2 border-2 border-destructive bg-destructive/10 px-3 py-1.5 text-[13px] tracking-widest uppercase font-bold text-destructive'
               }
             >
