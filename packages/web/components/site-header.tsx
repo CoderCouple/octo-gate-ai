@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import posthog from 'posthog-js';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { DotPortal } from '@/components/logo-marks';
@@ -30,7 +31,14 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <Button asChild size="sm">
-            <a href="https://calendly.com/sunil28071987/30min" target="_blank" rel="noreferrer">Talk to us</a>
+            <a
+              href="https://calendly.com/sunil28071987/30min"
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => posthog.capture('talk_to_us_clicked', { source: 'nav' })}
+            >
+              Talk to us
+            </a>
           </Button>
         </div>
       </div>

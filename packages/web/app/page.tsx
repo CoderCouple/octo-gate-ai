@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Check, X } from 'lucide-react';
+import posthog from 'posthog-js';
 import { useContainerWidth } from '@/lib/use-container-width';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -63,7 +64,14 @@ function Hero() {
         </p>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
           <Button asChild size="lg">
-            <a href="https://calendly.com/sunil28071987/30min" target="_blank" rel="noreferrer">Talk to us</a>
+            <a
+              href="https://calendly.com/sunil28071987/30min"
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => posthog.capture('talk_to_us_clicked', { source: 'hero' })}
+            >
+              Talk to us
+            </a>
           </Button>
         </div>
       </div>
@@ -229,7 +237,12 @@ function CTA() {
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <Button asChild size="lg">
-            <a href="mailto:support@octogate.dev?subject=Design%20partner">support@octogate.dev</a>
+            <a
+              href="mailto:support@octogate.dev?subject=Design%20partner"
+              onClick={() => posthog.capture('cta_email_clicked')}
+            >
+              support@octogate.dev
+            </a>
           </Button>
           <Button asChild variant="outline" size="lg">
             <a href="https://github.com/CoderCouple/octo-gate-ai" target="_blank" rel="noreferrer">

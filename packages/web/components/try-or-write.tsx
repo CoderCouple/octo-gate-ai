@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import posthog from 'posthog-js';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { DotText } from '@/components/dot-text';
@@ -46,11 +47,14 @@ export function TryOrWrite() {
   async function recordCompose() {
     const canvas = composeCanvasRef.current?.querySelector('canvas');
     if (!canvas || composeRecording) return;
+    posthog.capture('clip_record_started', { source: 'compose' });
     setComposeRecording(true);
     try {
       await recordCanvasClip(canvas, { durationMs: CLIP_DURATION_MS, filename: `octogate-compose-${Date.now()}` });
+      posthog.capture('clip_record_finished', { source: 'compose' });
     } catch (err) {
       console.error('[clip] recording failed', err);
+      posthog.capture('clip_record_failed', { source: 'compose', error: (err as Error).message });
     } finally {
       setComposeRecording(false);
     }
@@ -65,6 +69,7 @@ export function TryOrWrite() {
     link.download = `octogate-compose-${Date.now()}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
+    posthog.capture('frame_downloaded', { source: 'compose' });
   }
 
   // Rolling frame counter — purely cosmetic, matches design's live indicator.

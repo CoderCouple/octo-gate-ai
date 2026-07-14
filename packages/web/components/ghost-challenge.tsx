@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import posthog from 'posthog-js';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DotText } from '@/components/dot-text';
@@ -62,11 +63,14 @@ export function GhostChallenge({ onSuccess }: GhostChallengeProps) {
   async function recordClip() {
     const canvas = findCanvas();
     if (!canvas || recording) return;
+    posthog.capture('clip_record_started', { source: 'beat' });
     setRecording(true);
     try {
       await recordCanvasClip(canvas, { durationMs: CLIP_DURATION_MS, filename: `octogate-clip-${Date.now()}` });
+      posthog.capture('clip_record_finished', { source: 'beat' });
     } catch (err) {
       console.error('[clip] recording failed', err);
+      posthog.capture('clip_record_failed', { source: 'beat', error: (err as Error).message });
     } finally {
       setRecording(false);
     }
@@ -81,6 +85,7 @@ export function GhostChallenge({ onSuccess }: GhostChallengeProps) {
     link.download = `octogate-frame-${Date.now()}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
+    posthog.capture('frame_downloaded', { source: 'beat' });
   }
 
   function submit() {
@@ -88,17 +93,29 @@ export function GhostChallenge({ onSuccess }: GhostChallengeProps) {
     const elapsed = Date.now() - issuedAt;
     if (elapsed < 800) {
       setStatus('toofast');
+      posthog.capture('challenge_verified', { result: 'too_fast', elapsed_ms: elapsed });
       return;
     }
     if (answer.trim().toUpperCase() === word) {
       setStatus('success');
+      posthog.capture('challenge_verified', {
+        result: 'pass',
+        elapsed_ms: elapsed,
+        answer_length: word.length,
+      });
       onSuccess?.();
     } else {
       setStatus('wrong');
+      posthog.capture('challenge_verified', {
+        result: 'wrong',
+        elapsed_ms: elapsed,
+        answer_length: answer.length,
+      });
     }
   }
 
   function nextChallenge() {
+    posthog.capture('challenge_reset');
     setWord(pickWord());
     setAnswer('');
     setStatus('idle');
