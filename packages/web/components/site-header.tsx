@@ -18,9 +18,6 @@ export function SiteHeader() {
           </Link>
           <nav className="hidden md:flex items-center gap-1">
             <Button asChild variant="ghost" size="sm">
-              <Link href="/demo">Demo</Link>
-            </Button>
-            <Button asChild variant="ghost" size="sm">
               <Link href="/#integration">Docs</Link>
             </Button>
             <Button asChild variant="ghost" size="sm">
@@ -33,7 +30,7 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <Button asChild size="sm">
-            <a href="mailto:hello@octogateai.com?subject=Design%20partner">Talk to us</a>
+            <a href="https://calendly.com/sunil28071987/30min" target="_blank" rel="noreferrer">Talk to us</a>
           </Button>
         </div>
       </div>

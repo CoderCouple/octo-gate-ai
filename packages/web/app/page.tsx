@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -56,10 +55,7 @@ function Hero() {
         </p>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
           <Button asChild size="lg">
-            <a href="mailto:hello@octogateai.com?subject=Design%20partner">Talk to us</a>
-          </Button>
-          <Button asChild variant="outline" size="lg">
-            <Link href="/demo">Live demo →</Link>
+            <a href="https://calendly.com/sunil28071987/30min" target="_blank" rel="noreferrer">Talk to us</a>
           </Button>
         </div>
       </div>
@@ -113,9 +109,6 @@ function ModelReceipts() {
     { name: 'GPT-5', status: 'pending' },
     { name: 'Claude Opus 4.7', status: 'pending' },
     { name: 'Gemini 2.5 Pro', status: 'pending' },
-    { name: 'Grok 4', status: 'pending' },
-    { name: 'Llama 4 Behemoth', status: 'pending' },
-    { name: 'DeepSeek R2', status: 'pending' },
   ];
   return (
     <section className="mx-auto max-w-6xl px-6 py-12 border-t border-border">
@@ -124,9 +117,18 @@ function ModelReceipts() {
         We feed every challenge to leading models and publish the transcripts — the guesses, the hallucinated
         decoys, the reasoning chains that end in the wrong word.
       </p>
-      <p className="mt-2 text-[11px] tracking-widish uppercase text-muted-foreground">
-        Sample layout — replace with documented runs before launch.
-      </p>
+      <div className="mt-6 border border-border overflow-hidden bg-secondary/40">
+        <video
+          className="block w-full h-auto"
+          src="/octogate-demo.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          controls
+          aria-label="Recording of frontier models attempting the OctoGateAI challenge"
+        />
+      </div>
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {models.map((m) => (
           <div key={m.name} className="border border-border p-4">
@@ -193,11 +195,6 @@ Content-Type: application/json
           </CardContent>
         </Card>
       </div>
-      <div className="mt-6">
-        <Button asChild variant="link" size="sm">
-          <Link href="/demo">See a working demo →</Link>
-        </Button>
-      </div>
     </section>
   );
 }
@@ -217,7 +214,7 @@ function CTA() {
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <Button asChild size="lg">
-            <a href="mailto:hello@octogateai.com?subject=Design%20partner">hello@octogateai.com</a>
+            <a href="mailto:support@octogate.dev?subject=Design%20partner">support@octogate.dev</a>
           </Button>
           <Button asChild variant="outline" size="lg">
             <a href="https://github.com/CoderCouple/octo-gate-ai" target="_blank" rel="noreferrer">
