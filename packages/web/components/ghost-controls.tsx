@@ -81,8 +81,8 @@ export function GhostControls({
   const DirIcon = DIRECTION_ICONS[direction];
   return (
     <div className="border-t border-border font-mono text-[11px] tracking-widest uppercase">
-      {/* Row 1 — buttons */}
-      <div className="flex flex-nowrap items-center gap-2 px-4 py-3 overflow-x-auto">
+      {/* Row 1 — buttons. Wrap on mobile, single line on desktop. */}
+      <div className="flex flex-wrap md:flex-nowrap items-center gap-2 px-4 py-3 md:overflow-x-auto">
         <Btn
           onClick={() => onPausedChange(!paused)}
           active={paused}
@@ -130,8 +130,8 @@ export function GhostControls({
           {recording ? 'Recording…' : 'Clip ↓'}
         </Btn>
       </div>
-      {/* Row 2 — sliders */}
-      <div className="flex flex-wrap items-center gap-6 px-4 pb-3 border-t border-border pt-3">
+      {/* Row 2 — sliders. Stacks on narrow screens. */}
+      <div className="flex flex-col md:flex-row md:flex-wrap md:items-center gap-4 md:gap-6 px-4 pb-3 border-t border-border pt-3">
         <label className="flex items-center gap-2 shrink-0">
           <Gauge size={12} className="text-muted-foreground" />
           Speed

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Check, X } from 'lucide-react';
+import { useContainerWidth } from '@/lib/use-container-width';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,16 +21,21 @@ function Hero() {
   // noise remains, demonstrating that motion is what makes the letters
   // readable. touch: paused briefly, then resumes (mobile UX).
   const [heroHovered, setHeroHovered] = useState(false);
+  const [heroCanvasRef, heroContainerW] = useContainerWidth<HTMLDivElement>();
+  const heroCanvasW = heroContainerW > 0 ? Math.min(720, Math.floor(heroContainerW)) : 720;
+  const heroCanvasH = Math.round(heroCanvasW * (220 / 720));
+  const heroFontSize = Math.round(heroCanvasW * (140 / 720));
 
   return (
-    <section className="mx-auto max-w-6xl px-6 pt-20 pb-16">
+    <section className="mx-auto max-w-6xl px-4 sm:px-6 pt-12 sm:pt-20 pb-12 sm:pb-16">
       <div className="flex flex-col items-center text-center">
         <Badge variant="outline" className="text-[10px] tracking-widest uppercase px-3 py-1">
           Motion-based CAPTCHA · v0
         </Badge>
         <div className="mt-6 font-mono font-black tracking-tightest text-center">
           <div
-            className="my-2 flex justify-center"
+            ref={heroCanvasRef}
+            className="my-2 flex justify-center w-full"
             onMouseEnter={() => setHeroHovered(true)}
             onMouseLeave={() => setHeroHovered(false)}
             onTouchStart={() => setHeroHovered(true)}
@@ -37,9 +43,9 @@ function Hero() {
           >
             <DotText
               text="Captcha"
-              fontSize={140}
-              width={720}
-              height={220}
+              fontSize={heroFontSize}
+              width={heroCanvasW}
+              height={heroCanvasH}
               noiseCount={30000}
               ghost
               dotSize={1.6}

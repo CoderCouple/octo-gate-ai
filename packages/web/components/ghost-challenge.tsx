@@ -1,13 +1,23 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DotText } from '@/components/dot-text';
 import { GhostControls } from '@/components/ghost-controls';
 import { RecordingOverlay } from '@/components/recording-overlay';
 import { recordCanvasClip } from '@/lib/canvas-clip';
+import { useContainerWidth } from '@/lib/use-container-width';
 import { WORDS } from '@/lib/words';
+
+// Canvas responsive sizing: clamp to viewport, preserve ~2.38:1 aspect.
+const CANVAS_MAX_W = 1000;
+const CANVAS_ASPECT = 420 / 1000;
+function pickCanvasSize(containerW: number) {
+  const w = containerW > 0 ? Math.min(CANVAS_MAX_W, Math.floor(containerW)) : CANVAS_MAX_W;
+  const h = Math.round(w * CANVAS_ASPECT);
+  return { w, h };
+}
 
 const CLIP_DURATION_MS = 5000;
 
@@ -43,7 +53,8 @@ export function GhostChallenge({ onSuccess }: GhostChallengeProps) {
   const [density, setDensity] = useState(60000);
   const [positionSeed, setPositionSeed] = useState<number | undefined>(undefined);
   const [recording, setRecording] = useState(false);
-  const canvasWrapRef = useRef<HTMLDivElement | null>(null);
+  const [canvasWrapRef, containerW] = useContainerWidth<HTMLDivElement>();
+  const { w: canvasW, h: canvasH } = pickCanvasSize(containerW);
 
   function findCanvas(): HTMLCanvasElement | null {
     return canvasWrapRef.current?.querySelector('canvas') ?? null;
@@ -102,8 +113,8 @@ export function GhostChallenge({ onSuccess }: GhostChallengeProps) {
           key={key}
           text={word}
           fontSize={160}
-          width={1000}
-          height={420}
+          width={canvasW}
+          height={canvasH}
           noiseCount={density}
           ghost
           paused={paused}

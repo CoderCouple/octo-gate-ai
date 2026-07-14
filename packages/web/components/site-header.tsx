@@ -16,7 +16,7 @@ export function SiteHeader() {
             <DotPortal size={20} />
             <span>OctoGateAI</span>
           </Link>
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden sm:flex items-center gap-1">
             <Button asChild variant="ghost" size="sm">
               <Link href="/#integration">Docs</Link>
             </Button>

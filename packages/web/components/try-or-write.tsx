@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { DotText } from '@/components/dot-text';
@@ -9,8 +9,11 @@ import { GhostControls } from '@/components/ghost-controls';
 import { RecordingOverlay } from '@/components/recording-overlay';
 import { bumpSolveCount, readSolveCount } from '@/lib/counter';
 import { recordCanvasClip } from '@/lib/canvas-clip';
+import { useContainerWidth } from '@/lib/use-container-width';
 
 const CLIP_DURATION_MS = 5000;
+const CANVAS_MAX_W = 1000;
+const CANVAS_ASPECT = 420 / 1000;
 
 const MAX = 10;
 
@@ -36,7 +39,9 @@ export function TryOrWrite() {
   const [composeDensity, setComposeDensity] = useState(60000);
   const [composePositionSeed, setComposePositionSeed] = useState<number | undefined>(undefined);
   const [composeRecording, setComposeRecording] = useState(false);
-  const composeCanvasRef = useRef<HTMLDivElement | null>(null);
+  const [composeCanvasRef, composeContainerW] = useContainerWidth<HTMLDivElement>();
+  const composeCanvasW = composeContainerW > 0 ? Math.min(CANVAS_MAX_W, Math.floor(composeContainerW)) : CANVAS_MAX_W;
+  const composeCanvasH = Math.round(composeCanvasW * CANVAS_ASPECT);
 
   async function recordCompose() {
     const canvas = composeCanvasRef.current?.querySelector('canvas');
@@ -123,8 +128,8 @@ export function TryOrWrite() {
               <DotText
                 text={customWord.trim()}
                 fontSize={160}
-                width={1000}
-                height={420}
+                width={composeCanvasW}
+                height={composeCanvasH}
                 noiseCount={composeDensity}
                 ghost
                 paused={composePaused}
