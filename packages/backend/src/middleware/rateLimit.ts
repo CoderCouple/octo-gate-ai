@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import { redis } from '../redis.js';
 import { config } from '../config.js';
+import { posthog } from '../posthog.js';
 
 // Fixed 60-second window per IP. Atomic via INCR; the first hit in a window
 // also sets EXPIRE. There is a benign race where two concurrent first-hits
@@ -19,6 +20,16 @@ export async function rateLimit(
       await redis.expire(key, 60);
     }
     if (count > config.rateLimit) {
+      posthog.capture({
+        distinctId: ip,
+        event: 'rate_limit_exceeded',
+        properties: {
+          path: req.path,
+          request_count: count,
+          limit: config.rateLimit,
+          $process_person_profile: false,
+        },
+      });
       res.status(429).json({ success: false, reason: 'rate_limited' });
       return;
     }

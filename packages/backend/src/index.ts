@@ -3,6 +3,7 @@ import { config } from './config.js';
 import { migrate } from './schema.js';
 import { closeDb } from './db.js';
 import { closeRedis } from './redis.js';
+import { posthog } from './posthog.js';
 
 async function main(): Promise<void> {
   await migrate();
@@ -14,8 +15,11 @@ async function main(): Promise<void> {
   const shutdown = async (signal: string): Promise<void> => {
     console.log(`[octogateai] ${signal} received, shutting down`);
     server.close();
-    await closeDb().catch(() => {});
-    await closeRedis().catch(() => {});
+    await Promise.all([
+      closeDb().catch(() => {}),
+      closeRedis().catch(() => {}),
+      posthog.shutdown().catch(() => {}),
+    ]);
     process.exit(0);
   };
   process.on('SIGTERM', () => void shutdown('SIGTERM'));

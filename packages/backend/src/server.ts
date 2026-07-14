@@ -1,6 +1,8 @@
 import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { setupExpressRequestContext, setupExpressErrorHandler } from 'posthog-node';
+import { posthog } from './posthog.js';
 import { rateLimit } from './middleware/rateLimit.js';
 import { challengeRouter } from './routes/challenge.js';
 import { verifyRouter } from './routes/verify.js';
@@ -23,6 +25,10 @@ export function buildApp(): express.Express {
   app.set('trust proxy', 1);
 
   app.use(express.json({ limit: '16kb' }));
+
+  // Attach PostHog request context so events captured during a request inherit
+  // the session and distinct ID from X-POSTHOG-SESSION-ID / X-POSTHOG-DISTINCT-ID headers.
+  setupExpressRequestContext(posthog, app);
 
   // CORS. The frontend (Vercel) and any embedding customer page will call
   // this API cross-origin. The real security boundary is the per-sitekey
@@ -77,6 +83,10 @@ export function buildApp(): express.Express {
   app.use('/api', (_req, res) => {
     res.status(404).json({ success: false, reason: 'not_found' });
   });
+
+  // Capture unhandled Express errors in PostHog error tracking. Must be
+  // registered after all routes.
+  setupExpressErrorHandler(posthog, app);
 
   return app;
 }

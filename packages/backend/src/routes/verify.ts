@@ -4,6 +4,7 @@ import { consumeChallenge } from '../challenge.js';
 import { issueToken } from '../hmac.js';
 import { logEvent } from '../events.js';
 import { config } from '../config.js';
+import { posthog } from '../posthog.js';
 
 export const verifyRouter = Router();
 
@@ -32,6 +33,16 @@ verifyRouter.post('/verify', async (req, res) => {
   const stored = await consumeChallenge(challenge_id);
   if (!stored) {
     await logEvent(site.sitekey, 'expired', null, req.ip ?? null);
+    posthog.capture({
+      distinctId: site.sitekey,
+      event: 'challenge_expired',
+      properties: {
+        sitekey: site.sitekey,
+        challenge_id,
+        reason: 'expired_or_consumed',
+        $process_person_profile: false,
+      },
+    });
     res.json({ success: false, reason: 'expired_or_consumed' });
     return;
   }
@@ -50,6 +61,17 @@ verifyRouter.post('/verify', async (req, res) => {
   // scripts that fire /verify immediately after /challenge without rendering.
   if (solve_ms < config.minSolveMs) {
     await logEvent(site.sitekey, 'too_fast', solve_ms, req.ip ?? null);
+    posthog.capture({
+      distinctId: site.sitekey,
+      event: 'challenge_too_fast',
+      properties: {
+        sitekey: site.sitekey,
+        challenge_id,
+        solve_ms,
+        min_solve_ms: config.minSolveMs,
+        $process_person_profile: false,
+      },
+    });
     res.json({ success: false, reason: 'too_fast' });
     return;
   }
@@ -57,11 +79,31 @@ verifyRouter.post('/verify', async (req, res) => {
   const answer = rawAnswer.trim().toUpperCase();
   if (answer !== stored.answer) {
     await logEvent(site.sitekey, 'fail', solve_ms, req.ip ?? null);
+    posthog.capture({
+      distinctId: site.sitekey,
+      event: 'challenge_failed',
+      properties: {
+        sitekey: site.sitekey,
+        challenge_id,
+        solve_ms,
+        $process_person_profile: false,
+      },
+    });
     res.json({ success: false, reason: 'wrong_answer' });
     return;
   }
 
   const { token } = issueToken(site.sitekey);
   logEvent(site.sitekey, 'pass', solve_ms, req.ip ?? null);
+  posthog.capture({
+    distinctId: site.sitekey,
+    event: 'challenge_passed',
+    properties: {
+      sitekey: site.sitekey,
+      challenge_id,
+      solve_ms,
+      $process_person_profile: false,
+    },
+  });
   res.json({ success: true, token });
 });

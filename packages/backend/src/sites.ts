@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import { query } from './db.js';
+import { posthog } from './posthog.js';
 
 export interface Site {
   sitekey: string;
@@ -25,6 +26,28 @@ export async function createSite(
     'INSERT INTO sites (sitekey, secret_hash, name, origins) VALUES ($1, $2, $3, $4::jsonb)',
     [sitekey, sha256(secret), name, JSON.stringify(origins)],
   );
+  posthog.identify({
+    distinctId: sitekey,
+    properties: {
+      $set: {
+        site_name: name,
+        origins,
+        sitekey,
+      },
+      $set_once: {
+        created_at: new Date().toISOString(),
+      },
+    },
+  });
+  posthog.capture({
+    distinctId: sitekey,
+    event: 'site_created',
+    properties: {
+      sitekey,
+      site_name: name,
+      origin_count: origins.length,
+    },
+  });
   return { sitekey, secret };
 }
 
