@@ -18,3 +18,4 @@ packages/backend/public/widget/
 # TS build cache
 *.tsbuildinfo
 .claude/
+.vercel

@@ -28,6 +28,9 @@
     --input: 0 0% 87%;
     --ring: 0 0% 0%;
     --radius: 0px;
+    /* Brand accent — matrix green. Stays the same in both themes so the
+       hero highlight reads the same regardless of light/dark. */
+    --brand: 135 100% 50%;
   }
 
   .dark {
@@ -66,4 +69,13 @@
     background: hsl(var(--foreground));
     color: hsl(var(--background));
   }
+}
+
+/* Widget override — the vanilla widget's injected CSS caps its wrapper at
+   520px so it never blows out a customer's form. On our landing we want it
+   edge-to-edge inside the tab container. Long-term fix: make the widget
+   accept a data-fullwidth attribute; for v0 we override at the host. */
+.octogate.og-root {
+  max-width: none !important;
+  width: 100%;
 }

@@ -21,7 +21,7 @@ function makeClient() {
 export function Providers({ children }: { children: React.ReactNode }) {
   const [client] = useState(makeClient);
   return (
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} storageKey="og-theme">
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem storageKey="og-theme">
       <QueryClientProvider client={client}>{children}</QueryClientProvider>
     </ThemeProvider>
   );
