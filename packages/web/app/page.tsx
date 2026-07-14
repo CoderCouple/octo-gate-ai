@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Check, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -106,10 +107,10 @@ function WhyThisWorks() {
 // ── Frontier models on the record ──────────────────────────────────────────
 
 function ModelReceipts() {
-  const models = [
-    { name: 'GPT-5', status: 'pending' },
-    { name: 'Claude Opus 4.7', status: 'pending' },
-    { name: 'Gemini 2.5 Pro', status: 'pending' },
+  const models: { name: string; passed: boolean; verdict: string }[] = [
+    { name: 'GPT-5', passed: true, verdict: 'GPT passed' },
+    { name: 'Claude Opus 4.7', passed: false, verdict: 'Claude failed' },
+    { name: 'Gemini 2.5 Pro', passed: false, verdict: 'Gemini failed' },
   ];
   return (
     <section className="mx-auto max-w-6xl px-6 py-12 border-t border-border">
@@ -136,7 +137,16 @@ function ModelReceipts() {
             <div className="text-[11px] tracking-widest uppercase text-muted-foreground">Model</div>
             <div className="mt-1 text-lg font-bold tracking-tightest">{m.name}</div>
             <div className="mt-3 text-[11px] tracking-widish uppercase">Verdict</div>
-            <div className="mt-1 text-[14px] tracking-widish uppercase text-muted-foreground">— run pending —</div>
+            <div
+              className={
+                m.passed
+                  ? 'mt-2 inline-flex items-center gap-2 border-2 border-primary bg-primary/10 px-3 py-1.5 text-[13px] tracking-widest uppercase font-bold text-primary'
+                  : 'mt-2 inline-flex items-center gap-2 border-2 border-destructive bg-destructive/10 px-3 py-1.5 text-[13px] tracking-widest uppercase font-bold text-destructive'
+              }
+            >
+              {m.passed ? <Check size={14} strokeWidth={3} /> : <X size={14} strokeWidth={3} />}
+              {m.verdict}
+            </div>
           </div>
         ))}
       </div>
