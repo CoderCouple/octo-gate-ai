@@ -8,6 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { SiteHeader } from '@/components/site-header';
 import { DotText } from '@/components/dot-text';
 import { TryOrWrite } from '@/components/try-or-write';
+import { CodeBlock } from '@/components/code-block';
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3000';
 
@@ -154,13 +155,13 @@ function Integration() {
         the whole surface.
       </p>
       <div className="mt-6 grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>&gt; On the customer page</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <pre className="text-[12px] leading-relaxed overflow-x-auto">
-{`<script src="${API}/widget/v1.js" async defer></script>
+        <div>
+          <div className="mb-2 text-[11px] tracking-widest uppercase text-muted-foreground">
+            &gt; On the customer page
+          </div>
+          <CodeBlock
+            language="html"
+            code={`<script src="${API}/widget/v1.js" async defer></script>
 
 <div class="octogate"
      data-sitekey="ogk_..."
@@ -173,16 +174,15 @@ function Integration() {
     document.getElementById('signup_form').submit();
   };
 </script>`}
-            </pre>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>&gt; Your backend redeems it</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <pre className="text-[12px] leading-relaxed overflow-x-auto">
-{`POST ${API}/api/siteverify
+          />
+        </div>
+        <div>
+          <div className="mb-2 text-[11px] tracking-widest uppercase text-muted-foreground">
+            &gt; Your backend redeems it
+          </div>
+          <CodeBlock
+            language="http"
+            code={`POST ${API}/api/siteverify
 Content-Type: application/json
 
 {
@@ -191,9 +191,8 @@ Content-Type: application/json
 }
 
 // → { "success": true, "kind": "success", "issued_at": ... }`}
-            </pre>
-          </CardContent>
-        </Card>
+          />
+        </div>
       </div>
     </section>
   );
