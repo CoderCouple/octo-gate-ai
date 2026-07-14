@@ -296,6 +296,7 @@ export function DotText({
               ctx.fillRect(ix, iy, ds, ds);
             }
           }
+          // FG dots share the opposite velocity of BG — uniform density.
           for (const d of fgLayer) {
             d.x -= stepX;
             d.y -= stepY;
