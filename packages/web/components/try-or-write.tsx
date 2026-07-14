@@ -171,7 +171,7 @@ export function TryOrWrite() {
                   maxLength={MAX}
                   autoComplete="off"
                   spellCheck={false}
-                  placeholder="HELLO HUMAN"
+                  placeholder="EXAMPLE"
                   value={customWord}
                   onChange={(e) => setCustomWord(e.target.value.toUpperCase().replace(/[^A-Z ]/g, ''))}
                   className="mt-2 max-w-xl h-14 text-center font-mono text-lg uppercase tracking-widish"

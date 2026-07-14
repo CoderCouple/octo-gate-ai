@@ -7,6 +7,7 @@ import { DotText } from '@/components/dot-text';
 import { GhostControls } from '@/components/ghost-controls';
 import { RecordingOverlay } from '@/components/recording-overlay';
 import { recordCanvasClip } from '@/lib/canvas-clip';
+import { WORDS } from '@/lib/words';
 
 const CLIP_DURATION_MS = 5000;
 
@@ -23,12 +24,6 @@ interface GhostChallengeProps {
 // server-issued challenge and per-dot motion cluster technique, which
 // preserves invariant #1: the answer never appears in any client-bound
 // payload.
-const WORDS = [
-  'HUMAN', 'ROBOT', 'PROOF', 'CANDY', 'RIVER', 'HORSE', 'PIANO', 'TIGER',
-  'CLOUD', 'MANGO', 'BREAD', 'GLASS', 'NORTH', 'SOUTH', 'PLANE', 'STORM',
-  'LIGHT', 'CROWN', 'STONE', 'GREEN',
-];
-
 function pickWord(): string {
   return WORDS[Math.floor(Math.random() * WORDS.length)]!;
 }
