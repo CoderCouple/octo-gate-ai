@@ -7,6 +7,7 @@ import { verifyRouter } from './routes/verify.js';
 import { siteverifyRouter } from './routes/siteverify.js';
 import { statsRouter } from './routes/stats.js';
 import { healthRouter } from './routes/health.js';
+import { demoRouter } from './routes/demo.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // backend/dist/server.js → ../../public/ (built widget + any static assets)
@@ -62,11 +63,15 @@ export function buildApp(): express.Express {
   // legitimate signups would be self-harm.
   app.use('/api/challenge', rateLimit);
   app.use('/api/verify', rateLimit);
+  // Landing playground counter — public, rate-limited so it can't be
+  // spammed by scripts inflating the global solve count.
+  app.use('/api/demo/bump', rateLimit);
 
   app.use('/api', challengeRouter);
   app.use('/api', verifyRouter);
   app.use('/api', siteverifyRouter);
   app.use('/api', statsRouter);
+  app.use('/api', demoRouter);
 
   // JSON 404 for anything under /api — the widget expects JSON, not HTML.
   app.use('/api', (_req, res) => {

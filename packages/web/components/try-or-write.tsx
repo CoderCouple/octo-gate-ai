@@ -11,6 +11,7 @@ import { RecordingOverlay } from '@/components/recording-overlay';
 import { bumpSolveCount, readSolveCount } from '@/lib/counter';
 import { recordCanvasClip } from '@/lib/canvas-clip';
 import { useContainerWidth } from '@/lib/use-container-width';
+import { bumpDemoTotal, fetchDemoTotal } from '@/lib/demo-counter';
 
 const CLIP_DURATION_MS = 5000;
 const CANVAS_MAX_W = 1000;
@@ -27,6 +28,7 @@ export function TryOrWrite() {
   const [customWord, setCustomWord] = useState('');
   const [tab, setTab] = useState<'beat' | 'write'>('beat');
   const [solves, setSolves] = useState(0);
+  const [globalSolves, setGlobalSolves] = useState<number | null>(null);
   const [frame, setFrame] = useState(0);
 
   // Compose-tab controls. Beat-tab controls live inside GhostChallenge.
@@ -60,7 +62,10 @@ export function TryOrWrite() {
     }
   }
 
-  useEffect(() => setSolves(readSolveCount()), []);
+  useEffect(() => {
+    setSolves(readSolveCount());
+    fetchDemoTotal().then((n) => setGlobalSolves(n));
+  }, []);
 
   function downloadComposeFrame() {
     const canvas = composeCanvasRef.current?.querySelector('canvas');
@@ -117,7 +122,12 @@ export function TryOrWrite() {
                 customer-embed widget (LiveWidget) is unchanged — it still
                 uses the server-issued challenge and per-dot motion cluster
                 technique that preserves invariant #1. */}
-            <GhostChallenge onSuccess={() => setSolves(bumpSolveCount())} />
+            <GhostChallenge
+              onSuccess={() => {
+                setSolves(bumpSolveCount());
+                bumpDemoTotal().then((n) => n > 0 && setGlobalSolves(n));
+              }}
+            />
           </div>
         </TabsContent>
 
@@ -198,7 +208,11 @@ export function TryOrWrite() {
 
       {/* ── Stat tiles (design copy: attempts / solve rate / AI solves) ── */}
       <div className="mt-6 grid gap-4 md:grid-cols-3">
-        <StatTile value={String(attempts)} label="Human attempts" note="Stored in this browser (demo counter)" />
+        <StatTile
+          value={globalSolves === null ? '—' : String(globalSolves)}
+          label="Human solves"
+          note="Global count across all playgrounds"
+        />
         <StatTile value={solveRate} label="Human solve rate" note="First try, no reveal" highlight />
         <StatTile value="0" label="Documented AI solves" note="Unprompted, without being told the technique" />
       </div>
