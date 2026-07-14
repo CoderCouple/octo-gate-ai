@@ -1,7 +1,8 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import posthog from 'posthog-js';
+import { Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DotText } from '@/components/dot-text';
@@ -40,10 +41,17 @@ function pickWord(): string {
 }
 
 export function GhostChallenge({ onSuccess }: GhostChallengeProps) {
-  const [word, setWord] = useState<string>(() => pickWord());
+  // Empty on SSR — pickWord() uses Math.random() so we can't call it on
+  // the server or React hydration mismatches on the canvas aria-label.
+  // Set on client mount; the canvas renders noise while empty.
+  const [word, setWord] = useState<string>('');
+  useEffect(() => {
+    if (!word) setWord(pickWord());
+  }, [word]);
   const [answer, setAnswer] = useState('');
   const [status, setStatus] = useState<'idle' | 'wrong' | 'success' | 'toofast'>('idle');
   const [issuedAt, setIssuedAt] = useState<number>(() => Date.now());
+  const [solveMs, setSolveMs] = useState<number | null>(null);
   const [paused, setPaused] = useState(false);
   const [inverted, setInverted] = useState(false);
   const [direction, setDirection] = useState<
@@ -98,6 +106,7 @@ export function GhostChallenge({ onSuccess }: GhostChallengeProps) {
     }
     if (answer.trim().toUpperCase() === word) {
       setStatus('success');
+      setSolveMs(elapsed);
       posthog.capture('challenge_verified', {
         result: 'pass',
         elapsed_ms: elapsed,
@@ -118,6 +127,7 @@ export function GhostChallenge({ onSuccess }: GhostChallengeProps) {
     posthog.capture('challenge_reset');
     setWord(pickWord());
     setAnswer('');
+    setSolveMs(null);
     setStatus('idle');
     setIssuedAt(Date.now());
     setPositionSeed(undefined); // back to centered on reset
@@ -194,10 +204,40 @@ export function GhostChallenge({ onSuccess }: GhostChallengeProps) {
           </div>
         </div>
 
-        <div className="mt-3 min-h-[1.25em] text-[11px] tracking-widish uppercase">
-          {status === 'success' && <span className="text-primary">Verified.</span>}
-          {status === 'wrong' && <span className="text-muted-foreground">Wrong answer. Read again or try New.</span>}
-          {status === 'toofast' && <span className="text-muted-foreground">Too fast — read the motion.</span>}
+        <div className="mt-3 min-h-[3.5rem]">
+          {status === 'success' && (
+            <div className="inline-flex items-center gap-3 border-2 border-brand bg-brand/10 text-brand px-4 py-2 font-mono">
+              <Check size={20} strokeWidth={3} />
+              <div>
+                <div className="text-sm tracking-widest uppercase font-black">Human verified</div>
+                <div className="text-[11px] tracking-widish uppercase opacity-80">
+                  Solved in {solveMs !== null ? `${(solveMs / 1000).toFixed(1)}s` : '—'} · that&apos;s what humans do
+                </div>
+              </div>
+            </div>
+          )}
+          {status === 'wrong' && (
+            <div className="inline-flex items-center gap-3 border-2 border-destructive bg-destructive/10 text-destructive px-4 py-2 font-mono">
+              <X size={20} strokeWidth={3} />
+              <div>
+                <div className="text-sm tracking-widest uppercase font-black">Wrong answer</div>
+                <div className="text-[11px] tracking-widish uppercase opacity-80">
+                  Read the motion again or hit New for a fresh word
+                </div>
+              </div>
+            </div>
+          )}
+          {status === 'toofast' && (
+            <div className="inline-flex items-center gap-3 border-2 border-destructive bg-destructive/10 text-destructive px-4 py-2 font-mono">
+              <X size={20} strokeWidth={3} />
+              <div>
+                <div className="text-sm tracking-widest uppercase font-black">Too fast</div>
+                <div className="text-[11px] tracking-widish uppercase opacity-80">
+                  Motion challenges take at least a second to read
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
